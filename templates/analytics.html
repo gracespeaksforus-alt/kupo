@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics{% endblock %}
+{% block page_title %}Analytics{% endblock %}
+{% block topbar_action %}Export CSV{% endblock %}
+
+{% block content %}
+
+<div class="cards-grid cards-grid--3">
+  <div class="card card--blue">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+    </div>
+    <div class="card-body">
+      <span class="card-label">Total Logins (YTD)</span>
+      <span class="card-value">{{ logins | sum }}</span>
+    </div>
+    <div class="card-footer">Across all users</div>
+  </div>
+  <div class="card card--green">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+    </div>
+    <div class="card-body">
+      <span class="card-label">Total Signups (YTD)</span>
+      <span class="card-value">{{ signups | sum }}</span>
+    </div>
+    <div class="card-footer">New registrations</div>
+  </div>
+  <div class="card card--purple">
+    <div class="card-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    </div>
+    <div class="card-body">
+      <span class="card-label">Avg. Monthly Logins</span>
+      <span class="card-value">{{ (logins | sum / logins | length) | round(1) }}</span>
+    </div>
+    <div class="card-footer">Per month average</div>
+  </div>
+</div>
+
+<div class="panels-grid panels-grid--single">
+  <section class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Monthly Overview</h2>
+    </div>
+
+    <!-- Bar chart rendered with CSS/JS -->
+    <div class="chart-container" id="barChart"
+         data-months='{{ months | tojson }}'
+         data-signups='{{ signups | tojson }}'
+         data-logins='{{ logins | tojson }}'>
+    </div>
+
+    <div class="chart-legend">
+      <span class="legend-item legend-item--blue">Logins</span>
+      <span class="legend-item legend-item--green">Signups</span>
+    </div>
+  </section>
+</div>
+
+<div class="panels-grid">
+  <section class="panel">
+    <div class="panel-header">
+      <h2 class="panel-title">Monthly Breakdown</h2>
+    </div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Signups</th>
+          <th>Logins</th>
+          <th>Ratio</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for i in range(months | length) %}
+        <tr>
+          <td>{{ months[i] }}</td>
+          <td>{{ signups[i] }}</td>
+          <td>{{ logins[i] }}</td>
+          <td class="text-muted">{{ (logins[i] / signups[i]) | round(1) }}x</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </section>
+</div>
+
+{% endblock %}

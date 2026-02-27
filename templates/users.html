@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Users{% endblock %}
+{% block page_title %}Users{% endblock %}
+{% block topbar_action %}+ Invite User{% endblock %}
+
+{% block content %}
+<section class="panel">
+  <div class="panel-header">
+    <h2 class="panel-title">All Users <span class="count-badge">{{ users|length }}</span></h2>
+    <div class="panel-controls">
+      <input class="search-input" type="text" id="searchInput" placeholder="Search users&hellip;" oninput="filterTable()" />
+    </div>
+  </div>
+
+  <table class="table" id="usersTable">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Joined</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td class="text-muted">{{ u.id }}</td>
+        <td>
+          <div class="user-cell">
+            <div class="mini-avatar">{{ u.name[0] }}</div>
+            <span class="cell-name">{{ u.name }}</span>
+          </div>
+        </td>
+        <td class="text-muted">{{ u.email }}</td>
+        <td>{{ u.role }}</td>
+        <td><span class="badge badge--{{ u.status | lower }}">{{ u.status }}</span></td>
+        <td class="text-muted">{{ u.joined }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="table-footer">
+    <span class="text-muted">Showing <strong>{{ users|length }}</strong> users</span>
+  </div>
+</section>
+{% endblock %}
